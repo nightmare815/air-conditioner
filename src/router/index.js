@@ -51,25 +51,25 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' },
+      meta: {title: 'Dashboard', icon: 'dashboard'},
       hidden: true
     }]
   },
 
   {
-    path: '/device',
+    path: '/status',
     component: Layout,
-    redirect: '/device/index',
-    name: 'device',
+    redirect: '/status/index',
+    name: 'status',
     meta: {
-      title: '设备管理',
+      title: '状态管理',
       icon: 'nested'
     },
     children: [
       {
         path: 'index',
-        component: () => import('@/views/device/index'), // Parent router-view
-        name: '设备管理首页',
+        component: () => import('@/views/status/index'), // Parent router-view
+        name: '状态管理首页',
         meta: {
           title: '首页',
           icon: 'dashboard'
@@ -132,6 +132,116 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/device',
+    component: Layout,
+    redirect: '/device/index',
+    name: 'device',
+    meta: {
+      title: '设备管理',
+      icon: 'nested'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/device/index'), // Parent router-view
+        name: '设备管理首页',
+        meta: {
+          title: '设备管理',
+          icon: 'dashboard'
+        },
+        hidden: true
+      },
+    ]
+  },
+
+  {
+    path: '/airport',
+    component: Layout,
+    redirect: '/airport/list',
+    name: 'airport',
+    meta: {
+      title: '机场管理',
+      icon: 'nested'
+    },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/airport/list'), // Parent router-view
+        name: 'airportList',
+        meta: {
+          title: '机场列表',
+          icon: 'dashboard'
+        },
+      },
+      {
+        path: 'add',
+        component: () => import('@/views/airport/add'), // Parent router-view
+        name: '添加机场',
+        meta: {
+          title: '添加机场',
+          icon: 'dashboard'
+        },
+      },
+    ]
+  },
+
+  {
+    path: '/gallery',
+    component: Layout,
+    redirect: '/gallery/list',
+    name: 'gallery',
+    meta: {
+      title: '廊道管理',
+      icon: 'nested'
+    },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/gallery/list'), // Parent router-view
+        name: 'galleryList',
+        meta: {
+          title: '廊道列表',
+          icon: 'dashboard'
+        },
+      },
+      {
+        path: 'add',
+        component: () => import('@/views/gallery/add'), // Parent router-view
+        name: '添加廊道',
+        meta: {
+          title: '添加廊道',
+          icon: 'dashboard'
+        },
+      },
+    ]
+  },
+
+  {
+    path: '/condition',
+    component: Layout,
+    redirect: '/condition/index',
+    name: 'condition',
+    meta: {
+      title: '设备详情',
+      icon: 'nested'
+    },
+    hidden: true,
+    children: [
+      {
+        path: 'detail/:id',
+        component: () => import('@/views/condition/index'), // Parent router-view
+        name: 'detail',
+        meta: {
+          title: '设备详情',
+          icon: 'dashboard'
+        },
+      }
+    ]
+  },
+
   // {
   //   path: '/example',
   //   component: Layout,
@@ -167,64 +277,64 @@ export const constantRoutes = [
   //   ]
   // },
   //
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: { title: 'menu2' }
-      }
-    ]
-  },
+  // {
+  //   path: '/nested',
+  //   component: Layout,
+  //   redirect: '/nested/menu1',
+  //   name: 'Nested',
+  //   meta: {
+  //     title: 'Nested',
+  //     icon: 'nested'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'menu1',
+  //       component: () => import('@/views/nested/menu1/index'), // Parent router-view
+  //       name: 'Menu1',
+  //       meta: {title: 'Menu1'},
+  //       children: [
+  //         {
+  //           path: 'menu1-1',
+  //           component: () => import('@/views/nested/menu1/menu1-1'),
+  //           name: 'Menu1-1',
+  //           meta: {title: 'Menu1-1'}
+  //         },
+  //         {
+  //           path: 'menu1-2',
+  //           component: () => import('@/views/nested/menu1/menu1-2'),
+  //           name: 'Menu1-2',
+  //           meta: {title: 'Menu1-2'},
+  //           children: [
+  //             {
+  //               path: 'menu1-2-1',
+  //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
+  //               name: 'Menu1-2-1',
+  //               meta: {title: 'Menu1-2-1'}
+  //             },
+  //             {
+  //               path: 'menu1-2-2',
+  //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
+  //               name: 'Menu1-2-2',
+  //               meta: {title: 'Menu1-2-2'}
+  //             }
+  //           ]
+  //         },
+  //         {
+  //           path: 'menu1-3',
+  //           component: () => import('@/views/nested/menu1/menu1-3'),
+  //           name: 'Menu1-3',
+  //           meta: {title: 'Menu1-3'}
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'menu2',
+  //       component: () => import('@/views/nested/menu2/index'),
+  //       name: 'Menu2',
+  //       meta: {title: 'menu2'}
+  //     }
+  //   ]
+  // },
   //
   // {
   //   path: 'external-link',
@@ -238,12 +348,12 @@ export const constantRoutes = [
   // },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {path: '*', redirect: '/404', hidden: true}
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  mode: 'history', // require service support
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })
 
