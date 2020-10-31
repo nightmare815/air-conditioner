@@ -10,9 +10,9 @@ export default {
     })
   },
   //提交空调状态修改
-  publishMessage(status) {
+  publishMessage(status, sender) {
     return request({
-      url: `/aircondition/msgsend/publishMessage`,
+      url: `/aircondition/msgsend/publishMessage/${sender}`,
       method: 'post',
       data: status
     })

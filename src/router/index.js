@@ -135,22 +135,31 @@ export const constantRoutes = [
   {
     path: '/device',
     component: Layout,
-    redirect: '/device/index',
+    redirect: '/device/list',
     name: 'device',
     meta: {
       title: '设备管理',
       icon: 'nested'
     },
+    alwaysShow: true,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/device/index'), // Parent router-view
-        name: '设备管理首页',
+        path: 'list',
+        component: () => import('@/views/device/list'), // Parent router-view
+        name: 'deviceList',
         meta: {
-          title: '设备管理',
+          title: '设备列表',
           icon: 'dashboard'
         },
-        hidden: true
+      },
+      {
+        path: 'add',
+        component: () => import('@/views/device/add'), // Parent router-view
+        name: 'addDevice',
+        meta: {
+          title: '添加设备',
+          icon: 'dashboard'
+        },
       },
     ]
   },

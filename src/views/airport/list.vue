@@ -27,6 +27,10 @@
         prop="gmtCreate"
         label="注册时间">
       </el-table-column>
+      <el-table-column
+        prop="addBy"
+        label="创建者">
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -47,12 +51,10 @@
     <div class="block">
       <el-pagination
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @current-change="getPageAirport"
         :current-page="current"
-        :page-sizes="[5, 10, 15, 20]"
         :page-size="limit"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
     </div>
@@ -68,7 +70,7 @@
         airportList: [],
         loading: 'true',
         current: 1,
-        limit: 5,
+        limit: 10,
         total: 0
       }
     },

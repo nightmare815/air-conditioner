@@ -2,6 +2,14 @@ import request from '@/utils/request'
 
 export default {
 
+  //添加设备
+  addDevice(device) {
+    return request({
+      url: `/aircondition/device/addDevice`,
+      method: 'post',
+      data: device
+    })
+  },
   //获取所有设备
   getAllDevice() {
     return request({
@@ -33,4 +41,11 @@ export default {
       method: 'delete',
     })
   },
+  //获取设备的历史修改记录
+  getHistoryData(id) {
+    return request({
+      url: `/aircondition/msgsend/getHistoryData/${id}`,
+      method: 'get',
+    })
+  }
 }

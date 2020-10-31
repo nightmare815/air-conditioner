@@ -186,6 +186,9 @@
 
 <script>
 import showDetail from "@/views/param/showDetail";
+import getters from "@/store/getters";
+import {mapGetters} from "vuex";
+
   export default {
     name: "index",
     components: {
@@ -701,7 +704,7 @@ import showDetail from "@/views/param/showDetail";
       getConditionInfo(index) {
         this.conditionObj = this.conditions[index]
         this.conditionIndex = index;
-      }
+      },
     }
   }
 </script>

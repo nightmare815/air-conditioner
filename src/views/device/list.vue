@@ -62,24 +62,28 @@
       </el-table-column>
       <el-table-column
         prop="deviceId"
-        label="设备id">
+        label="设备id"
+        width="150px">
       </el-table-column>
       <el-table-column
         prop="type"
-        label="设备型号">
+        label="设备型号"
+        width="150px">
       </el-table-column>
       <el-table-column
         prop="routingKey"
         label="绑定路由">
       </el-table-column>
       <el-table-column
-        label="所属机场">
+        label="所属机场"
+        width="150px">
         <template slot-scope="scope">
           {{getAirportName(scope.row.airportId)}}
         </template>
       </el-table-column>
       <el-table-column
-        label="所属廊道">
+        label="所属廊道"
+        width="150px">
         <template slot-scope="scope">
           {{getGalleryName(scope.row.galleryId)}}
         </template>
@@ -87,6 +91,11 @@
       <el-table-column
         prop="gmtCreate"
         label="注册时间">
+      </el-table-column>
+      <el-table-column
+        prop="addBy"
+        label="创建者"
+        width="200px">
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -111,12 +120,10 @@
     <div class="block">
       <el-pagination
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @current-change="queryDeviceList"
         :current-page="current"
-        :page-sizes="[5, 10, 15, 20]"
         :page-size="limit"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
     </div>
@@ -133,10 +140,10 @@
       return {
         loading: 'true',
         current: 1,
-        limit: 5,
+        limit: 10,
         total: 0,
-        airportList:[],
-        galleryList:[],
+        airportList: [],
+        galleryList: [],
         deviceList: [],
         deviceQuery: {}
       }
@@ -162,7 +169,7 @@
       },
       getAirportName(id) {
         for (const airport of this.airportList) {
-          if(airport.id == id) {
+          if (airport.id == id) {
             return airport.name
             break
           }
@@ -170,14 +177,14 @@
       },
       getGalleryName(id) {
         for (const gallery of this.galleryList) {
-          if(gallery.id == id) {
+          if (gallery.id == id) {
             return gallery.name
             break
           }
         }
       },
       editDeviceInfo(index, row) {
-        console.log(index, row);
+        console.log(list, row);
       },
       removeDevice(id) {
         this.$confirm('此操作将永久删除该设备, 是否继续?', '提示', {
@@ -204,20 +211,20 @@
 
       //获取所有机场
       getAllAirport() {
-        airport.getAllAirport().then(res=>{
+        airport.getAllAirport().then(res => {
           this.airportList = res.data.airportList
         })
       },
       //获取所有廊道
       getAllGallery() {
-        gallery.getAllGallery().then(res=>{
+        gallery.getAllGallery().then(res => {
           this.galleryList = res.data.galleryList
         })
       },
 
       deviceDetail(index, row) {
         let deviceId = row.deviceId;
-        this.$router.push({name: "detail", params:{"id": deviceId}})
+        this.$router.push({name: "detail", params: {"id": deviceId}})
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
