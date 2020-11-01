@@ -7,6 +7,13 @@ export function login(data) {
     data
   })
 }
+export function updatePassword(data) {
+  return request({
+    url: '/aircondition/user/updatePassword',
+    method: 'post',
+    data
+  })
+}
 
 export function getInfo(token) {
   return request({

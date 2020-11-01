@@ -3,19 +3,19 @@
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-select size="mini" v-model="deviceQuery.airport" clearable placeholder="机场名">
-          <el-option v-for="airport in airportList" :key="airport.id" :value="airport.id" :label="airport.name" @click="getAirportGallery(airport.id)"/>
+        <el-select size="mini" v-model="deviceQuery.airport" clearable placeholder="请选择机场名" @change="getAirportGallery">
+          <el-option v-for="airport in airportList" :key="airport.id" :value="airport.id" :label="airport.name"/>
         </el-select>
       </el-form-item>
 
       <el-form-item>
-        <el-select size="mini" v-model="deviceQuery.gallery" clearable placeholder="廊道名">
-          <el-option v-for="gallery in galleryList" :key="gallery.id" :value="gallery.id" :label="gallery.name"/>
+        <el-select size="mini" v-model="deviceQuery.gallery" clearable placeholder="请选择廊道名">
+          <el-option v-for="gallery in selectGalleryList" :key="gallery.id" :value="gallery.id" :label="gallery.name"/>
         </el-select>
       </el-form-item>
 
       <el-form-item>
-        <el-input size="mini" v-model="deviceQuery.deviceId" clearable placeholder="设备号">
+        <el-input size="mini" v-model="deviceQuery.deviceId" clearable placeholder="请输入设备号">
         </el-input>
       </el-form-item>
 
@@ -145,7 +145,14 @@
         airportList: [],
         galleryList: [],
         deviceList: [],
-        deviceQuery: {}
+        deviceQuery: {
+          airport: '',
+          gallery: '',
+          deviceId: '',
+          begin:  '',
+          end: '',
+        },
+        selectGalleryList:[], //选择机场后的galleryList
       }
     },
     created() {
@@ -234,19 +241,20 @@
       },
       resetData() {
         this.deviceQuery = {}
+        this.selectGalleryList = []
         this.queryDeviceList(1);
         this.getAllAirport();
         this.getAllGallery();
       },
+      //会自动把value即airportid传过来
       getAirportGallery(airportId) {
-        let selectGallery = []
-        for (const gallery in this.galleryList) {
-          if(gallery.airportId==airportId) {
-            selectGallery.push(gallery)
+        this.selectGalleryList = []
+        for (const gallery of this.galleryList) {
+          if(gallery.airportId == airportId) {
+            this.selectGalleryList.push(gallery)
           }
         }
-        console.log(selectGallery)
-        this.galleryList = selectGallery
+        this.deviceQuery.gallery = ''
       }
     }
   }
