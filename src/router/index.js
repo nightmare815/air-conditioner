@@ -231,7 +231,7 @@ export const constantRoutes = [
   {
     path: '/condition',
     component: Layout,
-    redirect: '/condition/index',
+    redirect: '/device/list',
     name: 'condition',
     meta: {
       title: '设备详情',
@@ -244,7 +244,7 @@ export const constantRoutes = [
         component: () => import('@/views/condition/index'), // Parent router-view
         name: 'detail',
         meta: {
-          title: '设备详情',
+          title: '设备状态',
           icon: 'dashboard'
         },
       }

@@ -3,8 +3,8 @@
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-select size="mini" v-model="deviceQuery.airport" clearable placeholder="机场名">
-          <el-option v-for="airport in airportList" :key="airport.id" :value="airport.id" :label="airport.name"/>
+        <el-select size="mini" v-model="deviceQuery.airport" clearable placeholder="机场名"">
+          <el-option v-for="airport in airportList" :key="airport.id" :value="airport.id" :label="airport.name" @select="getAirportGallery(airport.id)"/>
         </el-select>
       </el-form-item>
 
@@ -235,6 +235,14 @@
       resetData() {
         this.deviceQuery = {}
         this.queryDeviceList(1)
+      },
+      getAirportGallery(airportId) {
+        let selectGallery = []
+        for (const gallery in this.galleryList) {
+          if(gallery.airportId==airportId) {
+            selectGallery.push(gallery)
+          }
+        }
       }
     }
   }

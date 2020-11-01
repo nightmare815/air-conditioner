@@ -188,12 +188,12 @@
           </el-table-column>
           <el-table-column label="室温">
             <template slot-scope="scope">
-              {{getContent(scope.row.content).dry}}
+              {{getContent(scope.row.content).temp}}
             </template>
           </el-table-column>
           <el-table-column label="湿度">
             <template slot-scope="scope">
-              {{getContent(scope.row.content).temp}}
+              {{getContent(scope.row.content).humi}}
             </template>
           </el-table-column>
           <el-table-column label="模式">
@@ -213,7 +213,7 @@
           </el-table-column>
           <el-table-column label="扫风">
             <template slot-scope="scope">
-              {{weepOptions[getContent(scope.row.content).wind].label}}
+              {{weepOptions[getContent(scope.row.content).weep].label}}
             </template>
           </el-table-column>
           <el-table-column label="电源">
@@ -287,61 +287,6 @@
     },
     data() {
       return {
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }],
-        current: 1,
-        limit: 5,
-        total: 0,
-        airportList:[],
-
         historyData: [],
         hasStatus: false,
         dialogTableVisible: false,
@@ -485,7 +430,7 @@
           })
       },
       tip() {
-        this.$alert('此设备还有没有相关状态消息! 点击确认返回设备列表界面', '消息提示', {
+        this.$alert('此设备还有没有相关状态消息! 点击确认返回设备列表页面', '消息提示', {
           confirmButtonText: '确定',
           callback: action => {
             this.$router.push({name: "deviceList"})
@@ -496,6 +441,7 @@
         device.getHistoryData(this.status.deviceId).then(res => {
           this.historyData = res.data.msgSendList;
           this.dialogTableVisible = true
+          console.log(this.historyData)
         }).catch(err => {
           this.$message({
             type: "error",
