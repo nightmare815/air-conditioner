@@ -4,7 +4,8 @@
       <!--只在设备管理界面显示此div-->
       <div class="submit">
         <el-button size="mini" type="danger" @click="submit()">提交修改</el-button>
-        <el-button size="mini" type="primary" @click="showHistory()">历史记录</el-button>
+        <el-button size="mini" type="primary" @click="showHistory()">历史修改记录</el-button>
+        <el-button size="mini" type="primary" @click="showMsgReceive()">历史消息记录</el-button>
       </div>
     </div>
 
@@ -177,7 +178,7 @@
     </div>
 
     <!--历史记录对话框-->
-    <el-dialog title="历史修改记录" :visible.sync="dialogTableVisible" width="85%">
+    <el-dialog title="历史修改记录" :visible.sync="dialogTableVisible_modify" width="85%">
       <el-table :data="historyData" border fit highlight-current-row height="500" style="width: 100%">
         <el-table-column prop="destination" label="设备id" width="120" header-align="center"></el-table-column>
         <el-table-column prop="content" label="修改内容" header-align="center">
@@ -256,6 +257,91 @@
         <el-table-column prop="sender" label="修改人" width="80" header-align="center"></el-table-column>
       </el-table>
     </el-dialog>
+
+    <!--历史消息对话框-->
+    <el-dialog title="历史消息记录" :visible.sync="dialogTableVisible_receive" width="85%">
+      <el-table :data="historyReceiveMsg" border fit highlight-current-row height="500" style="width: 100%">
+        <el-table-column prop="sender" label="设备id" width="120" header-align="center"></el-table-column>
+        <el-table-column prop="content" label="修改内容" header-align="center">
+          <el-table-column label="温度">
+            <template slot-scope="scope">
+              {{getContent(scope.row.content).temperature}}
+            </template>
+          </el-table-column>
+          <el-table-column label="室温">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{getContent(scope.row.content).temp}}
+            </template>
+          </el-table-column>
+          <el-table-column label="湿度">
+            <template slot-scope="scope">
+              {{getContent(scope.row.content).humi}}
+            </template>
+          </el-table-column>
+          <el-table-column label="模式">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{workOptions[getContent(scope.row.content).mode-1].label}}
+            </template>
+          </el-table-column>
+          <el-table-column label="温显">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{temOptions[getContent(scope.row.content).showtemp].label}}
+            </template>
+          </el-table-column>
+          <el-table-column label="风速">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{windOptions[getContent(scope.row.content).wind].label}}
+            </template>
+          </el-table-column>
+          <el-table-column label="扫风">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{weepOptions[getContent(scope.row.content).weep].label}}
+            </template>
+          </el-table-column>
+          <el-table-column label="电源">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{getContent(scope.row.content).source==0?"关闭":"打开"}}
+            </template>
+          </el-table-column>
+          <el-table-column label="超强风">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{getContent(scope.row.content).power==0?"关闭":"打开"}}
+            </template>
+          </el-table-column>
+          <el-table-column label="灯光">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{getContent(scope.row.content).light==0?"关闭":"打开"}}
+            </template>
+          </el-table-column>
+          <el-table-column label="节能">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{getContent(scope.row.content).save==0?"关闭":"打开"}}
+            </template>
+          </el-table-column>
+          <el-table-column label="干燥">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{getContent(scope.row.content).dry==0?"关闭":"打开"}}
+            </template>
+          </el-table-column>
+          <el-table-column label="睡眠">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{getContent(scope.row.content).sleep==0?"关闭":"打开"}}
+            </template>
+          </el-table-column>
+          <el-table-column label="健康">
+            <template slot-scope="scope" v-if="scope.row.type==1">
+              {{healthOptions[getContent(scope.row.content).health].label}}
+            </template>
+          </el-table-column>
+        </el-table-column>
+        <el-table-column label="消息类型" width="80" header-align="center">
+          <template slot-scope="scope">
+            {{scope.row.type==0?"定时发送":"主动发送"}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="gmtCreate" label="上报时间" width="160" header-align="center"></el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -287,9 +373,11 @@
     },
     data() {
       return {
-        historyData: [],
+        historyData: [],  //历史修改记录
+        historyReceiveMsg:[], //收到的历史消息
         hasStatus: false,
-        dialogTableVisible: false,
+        dialogTableVisible_modify: false,
+        dialogTableVisible_receive: false,
         windOptions: [
           {//风速选项
             value: '0',
@@ -440,8 +528,18 @@
       showHistory() {
         device.getHistoryData(this.status.deviceId).then(res => {
           this.historyData = res.data.msgSendList;
-          this.dialogTableVisible = true
-          console.log(this.historyData)
+          this.dialogTableVisible_modify = true
+        }).catch(err => {
+          this.$message({
+            type: "error",
+            message: "获取历史数据失败!"
+          })
+        })
+      },
+      showMsgReceive() {
+        device.getReceiveMsg(this.status.deviceId).then(res => {
+          this.historyReceiveMsg = res.data.msgReceiveList
+          this.dialogTableVisible_receive = true
         }).catch(err => {
           this.$message({
             type: "error",
@@ -452,7 +550,7 @@
       getContent(content) {
         let status = JSON.parse(content)
         return status
-      }
+      },
     }
   }
 </script>

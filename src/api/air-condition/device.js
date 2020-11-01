@@ -47,5 +47,12 @@ export default {
       url: `/aircondition/msgsend/getHistoryData/${id}`,
       method: 'get',
     })
+  },
+  //获取设备收到的历史消息
+  getReceiveMsg(id) {
+    return request({
+      url: `/aircondition/msgreceive/getReceiveMsg/${id}`,
+      method: 'get',
+    })
   }
 }
