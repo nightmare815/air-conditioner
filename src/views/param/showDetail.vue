@@ -4,8 +4,8 @@
       <!--只在设备管理界面显示此div-->
       <div class="submit">
         <el-button size="mini" type="danger" @click="submit()">提交修改</el-button>
-        <el-button size="mini" type="primary" @click="showHistory()">历史修改记录</el-button>
-        <el-button size="mini" type="primary" @click="showMsgReceive()">历史消息记录</el-button>
+        <el-button size="mini" type="primary" @click="showPageHistoryData()">历史修改记录</el-button>
+        <el-button size="mini" type="primary" @click="showPageMsgReceive()">历史消息记录</el-button>
       </div>
     </div>
 
@@ -36,10 +36,10 @@
                 <div class="current-mode">
                   <el-tag type="success" style="margin-right: 70px">工作模式:</el-tag>
                   <el-radio-group v-model="status.mode" size="medium" :disabled="disable" :text-color="textColor">
-                    <el-radio-button label="4">送风</el-radio-button>
                     <el-radio-button label="1">自动</el-radio-button>
-                    <el-radio-button label="3">除湿</el-radio-button>
                     <el-radio-button label="2">制冷</el-radio-button>
+                    <el-radio-button label="3">除湿</el-radio-button>
+                    <el-radio-button label="4">送风</el-radio-button>
                     <el-radio-button label="5">制热</el-radio-button>
                   </el-radio-group>
                 </div>
@@ -179,8 +179,16 @@
 
     <!--历史记录对话框-->
     <el-dialog title="历史修改记录" :visible.sync="dialogTableVisible_modify" width="85%">
-      <el-table :data="historyData" border fit highlight-current-row height="500" style="width: 100%">
-        <el-table-column prop="destination" label="设备id" width="120" header-align="center"></el-table-column>
+      <el-table :data="historyData" border fit highlight-current-row height="360"  style="width: 100%">
+<!--        <el-table-column prop="destination" label="设备id" width="120" header-align="center"></el-table-column>-->
+        <el-table-column
+          label="序号"
+          width="60px"
+          align="center">
+          <template slot-scope="scope">
+            {{(current - 1) * limit + scope.$index + 1}}
+          </template>
+        </el-table-column>
         <el-table-column prop="content" label="修改内容" header-align="center">
           <el-table-column label="温度">
             <template slot-scope="scope">
@@ -254,14 +262,34 @@
           </el-table-column>
         </el-table-column>
         <el-table-column prop="gmtCreate" label="修改时间" width="160" header-align="center"></el-table-column>
-        <el-table-column prop="sender" label="修改人" width="80" header-align="center"></el-table-column>
+        <el-table-column prop="sender" label="修改人" width="120" header-align="center"></el-table-column>
       </el-table>
+      <!--历史修改分页-->
+      <div class="block">
+        <el-pagination
+          background
+          @current-change="showPageHistoryData"
+          :current-page="current"
+          :page-size="limit"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
     </el-dialog>
+
 
     <!--历史消息对话框-->
     <el-dialog title="历史消息记录" :visible.sync="dialogTableVisible_receive" width="85%">
-      <el-table :data="historyReceiveMsg" border fit highlight-current-row height="500" style="width: 100%">
-        <el-table-column prop="sender" label="设备id" width="120" header-align="center"></el-table-column>
+      <el-table :data="historyReceiveMsg" border fit highlight-current-row height="360" style="width: 100%">
+<!--        <el-table-column prop="sender" label="设备id" width="120" header-align="center"></el-table-column>-->
+        <el-table-column
+          label="序号"
+          width="60px"
+          align="center">
+          <template slot-scope="scope">
+            {{(current - 1) * limit + scope.$index + 1}}
+          </template>
+        </el-table-column>
         <el-table-column prop="content" label="修改内容" header-align="center">
           <el-table-column label="温度">
             <template slot-scope="scope">
@@ -341,6 +369,17 @@
         </el-table-column>
         <el-table-column prop="gmtCreate" label="上报时间" width="160" header-align="center"></el-table-column>
       </el-table>
+      <!--分页-->
+      <div class="block">
+        <el-pagination
+          background
+          @current-change="showPageMsgReceive"
+          :current-page="current"
+          :page-size="limit"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -365,7 +404,8 @@
     created() {
       if (this.status) {
         this.hasStatus = true
-        this.status = this.formatPageParam(this.status)
+        // this.status = this.formatPageParam(this.status)
+        // console.log(this.status)
       } else {
         this.hasStatus = false
         this.tip();
@@ -373,6 +413,10 @@
     },
     data() {
       return {
+        lastMessageMillis:this.$store.getters.lastMessageMillis,
+        current: 1,
+        limit: 5,
+        total: 0,
         historyData: [],  //历史修改记录
         historyReceiveMsg:[], //收到的历史消息
         hasStatus: false,
@@ -453,7 +497,7 @@
     computed: {
       ...mapGetters([
         'name'
-      ])
+      ]),
     },
     methods: {
       getPageAirport(current = 1) {
@@ -525,9 +569,17 @@
           }
         });
       },
-      showHistory() {
-        device.getHistoryData(this.status.deviceId).then(res => {
-          this.historyData = res.data.msgSendList;
+      getContent(content) {
+        let status = JSON.parse(content)
+        return status
+      },
+      //历史修改分页
+      showPageHistoryData(current = 1) {
+        this.current = current;
+        device.getPageHistoryData(this.status.deviceId, this.current, this.limit)
+        .then(res => {
+          this.historyData = res.data.records;
+          this.total = res.data.total
           this.dialogTableVisible_modify = true
         }).catch(err => {
           this.$message({
@@ -536,9 +588,12 @@
           })
         })
       },
-      showMsgReceive() {
-        device.getReceiveMsg(this.status.deviceId).then(res => {
-          this.historyReceiveMsg = res.data.msgReceiveList
+      //历史消息分页
+      showPageMsgReceive(current = 1) {
+        this.current = current
+        device.getPageReceiveMsg(this.status.deviceId, this.current, this.limit).then(res => {
+          this.historyReceiveMsg = res.data.records
+          this.total = res.data.total
           this.dialogTableVisible_receive = true
         }).catch(err => {
           this.$message({
@@ -546,10 +601,6 @@
             message: "获取历史数据失败!"
           })
         })
-      },
-      getContent(content) {
-        let status = JSON.parse(content)
-        return status
       },
     }
   }
@@ -588,6 +639,10 @@
 
   .submit {
     margin: 30px 0 30px 30px;
+  }
+  .block {
+    margin: 50px auto;
+    text-align: center;
   }
 </style>
 <style>

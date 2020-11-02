@@ -54,5 +54,20 @@ export default {
       url: `/aircondition/msgreceive/getReceiveMsg/${id}`,
       method: 'get',
     })
+  },
+
+  //分页获取设备的历史修改记录
+  getPageHistoryData(id, current, limit) {
+    return request({
+      url: `/aircondition/msgsend/getPageHistoryData/${id}/${current}/${limit}/`,
+      method: 'get',
+    })
+  },
+  //分页获取设备收到的历史消息
+  getPageReceiveMsg(id, current, limit) {
+    return request({
+      url: `/aircondition/msgreceive/getPageReceiveMsg/${id}/${current}/${limit}/`,
+      method: 'get',
+    })
   }
 }
