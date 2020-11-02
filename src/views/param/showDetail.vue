@@ -179,7 +179,7 @@
 
     <!--历史记录对话框-->
     <el-dialog title="历史修改记录" :visible.sync="dialogTableVisible_modify" width="85%">
-      <el-table :data="historyData" border fit highlight-current-row height="360"  style="width: 100%">
+      <el-table :data="historyData" border fit highlight-current-row height="380"  style="width: 100%">
 <!--        <el-table-column prop="destination" label="设备id" width="120" header-align="center"></el-table-column>-->
         <el-table-column
           label="序号"
@@ -189,6 +189,7 @@
             {{(current - 1) * limit + scope.$index + 1}}
           </template>
         </el-table-column>
+        <el-table-column prop="gmtCreate" label="修改时间" width="160" header-align="center"></el-table-column>
         <el-table-column prop="content" label="修改内容" header-align="center">
           <el-table-column label="温度">
             <template slot-scope="scope">
@@ -261,7 +262,6 @@
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column prop="gmtCreate" label="修改时间" width="160" header-align="center"></el-table-column>
         <el-table-column prop="sender" label="修改人" width="120" header-align="center"></el-table-column>
       </el-table>
       <!--历史修改分页-->
@@ -280,7 +280,7 @@
 
     <!--历史消息对话框-->
     <el-dialog title="历史消息记录" :visible.sync="dialogTableVisible_receive" width="85%">
-      <el-table :data="historyReceiveMsg" border fit highlight-current-row height="360" style="width: 100%">
+      <el-table :data="historyReceiveMsg" border fit highlight-current-row height="380" style="width: 100%">
 <!--        <el-table-column prop="sender" label="设备id" width="120" header-align="center"></el-table-column>-->
         <el-table-column
           label="序号"
@@ -290,6 +290,7 @@
             {{(current - 1) * limit + scope.$index + 1}}
           </template>
         </el-table-column>
+        <el-table-column prop="gmtCreate" label="上报时间" width="160" header-align="center"></el-table-column>
         <el-table-column prop="content" label="修改内容" header-align="center">
           <el-table-column label="温度">
             <template slot-scope="scope">
@@ -367,7 +368,6 @@
             {{scope.row.type==0?"定时发送":"主动发送"}}
           </template>
         </el-table-column>
-        <el-table-column prop="gmtCreate" label="上报时间" width="160" header-align="center"></el-table-column>
       </el-table>
       <!--分页-->
       <div class="block">
