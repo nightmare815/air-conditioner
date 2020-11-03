@@ -1,19 +1,24 @@
 <template>
   <div class="app-container">
     <el-container style="padding-top: 50px">
-      <el-col :offset="8" :span="8">
-        <el-form ref="device" :model="device" :rules="rules" label-width="80px">
+      <el-col :offset="6" :span="12">
+        <el-form ref="device" :model="device" :rules="rules" label-width="100px">
           <el-form-item label="设备编号" prop="deviceId">
-            <el-input v-model="device.deviceId" placeholder="请输入设备的编号"></el-input>
+            <el-input v-model="device.deviceId" ></el-input>
           </el-form-item>
           <el-form-item label="机场名称" prop="airportId">
-            <el-select v-model="device.airportId" placeholder="请选择所属机场">
+            <el-select v-model="device.airportId" @change="getAirportStation">
               <el-option v-for="airport in airportList" :key="airport.id" :value="airport.id" :label="airport.name"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="廊道名称" prop="galleryId">
-            <el-select v-model="device.galleryId" placeholder="请选择所属廊道">
-              <el-option v-for="gallery in galleryList" :key="gallery.id" :value="gallery.id" :label="gallery.name"/>
+          <el-form-item label="航站楼名称" prop="stationId">
+            <el-select v-model="device.stationId" @change="getStationBridge">
+              <el-option v-for="station in selectStationList" :key="station.id" :value="station.id" :label="station.name"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="登机桥名称" prop="bridgeId">
+            <el-select v-model="device.bridgeId" >
+              <el-option v-for="bridge in selectBridgeList" :key="bridge.id" :value="bridge.id" :label="bridge.name"/>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -28,7 +33,8 @@
 
 <script>
   import device from "@/api/air-condition/device";
-  import gallery from "@/api/air-condition/gallery";
+  import station from "@/api/air-condition/station";
+  import bridge from "@/api/air-condition/bridge";
   import airport from "@/api/air-condition/airport";
   import config from "@/api/air-condition/config";
   import {mapGetters} from "vuex";
@@ -38,13 +44,17 @@
       return {
         device: {
           deviceId: '',
-          galleryId: '',
+          bridgeId: '',
+          stationId: '',
           airportId: '',
           routingKey: '',
           addBy:''
         },
         airportList: [],
-        galleryList: [],
+        stationList: [],
+        bridgeList: [],
+        selectStationList:[],
+        selectBridgeList:[],
         rules: {
           deviceId: [
             {required: true, message: '请输入设备的编号', trigger: 'blur'},
@@ -53,15 +63,19 @@
           airportId: [
             {required: true, message: '请选择所属机场', trigger: 'change'}
           ],
-          galleryId: [
-            {required: true, message: '请选择所属廊道', trigger: 'change'}
+          stationId: [
+            {required: true, message: '请选择所属航站楼', trigger: 'change'}
+          ],
+          bridgeId: [
+            {required: true, message: '请选择所属登机桥', trigger: 'change'}
           ],
         },
       }
     },
     created() {
       this.getAllAirport();
-      this.getAllGallery();
+      this.getAllStation();
+      this.getAllBridge();
     },
     computed: {
       ...mapGetters([
@@ -99,11 +113,38 @@
           this.airportList = res.data.airportList
         })
       },
-      //获取所有廊道
-      getAllGallery() {
-        gallery.getAllGallery().then(res => {
-          this.galleryList = res.data.galleryList
+      //获取所有航站
+      getAllStation() {
+        station.findAllStation().then(res => {
+          this.stationList = res.data.airportStationList
         })
+      },
+      //获取所有登机桥
+      getAllBridge() {
+        bridge.findAllAirportBridge().then(res => {
+          this.bridgeList = res.data.airportBridgeList
+        })
+      },
+      //会自动把value即airportid传过来
+      getAirportStation(airportId) {
+        this.selectStationList = []
+        for (const station of this.stationList) {
+          if(station.airportId == airportId) {
+            this.selectStationList.push(station)
+          }
+        }
+        this.device.stationId = ''
+        this.device.bridgeId = ''
+      },
+
+      getStationBridge(stationId) {
+        this.selectBridgeList = []
+        for (const bridge of this.bridgeList) {
+          if(bridge.stationId == stationId) {
+            this.selectBridgeList.push(bridge)
+          }
+        }
+        this.device.bridgeId = ''
       },
     }
   }

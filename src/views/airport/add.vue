@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-container style="padding-top: 50px">
-        <el-col :offset="8" :span="8">
+        <el-col :offset="6" :span="12">
           <el-form ref="airport" :model="airport" :rules="rules" label-width="80px">
             <el-form-item label="机场名称" prop="name">
               <el-input v-model="airport.name"></el-input>
@@ -18,7 +18,7 @@
 
 <script>
   import airport from "@/api/air-condition/airport";
-  import gallery from "@/api/air-condition/gallery";
+  import gallery from "@/api/air-condition/station";
   import {mapGetters} from "vuex";
 
   export default {

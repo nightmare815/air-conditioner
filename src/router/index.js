@@ -87,9 +87,9 @@ export const constantRoutes = [
       //   },
       // },
       // {
-      //   path: 'gallery',
-      //   component: () => import('@/views/airport/gallery/index'), // Parent router-view
-      //   name: 'gallery',
+      //   path: 'station',
+      //   component: () => import('@/views/airport/station/index'), // Parent router-view
+      //   name: 'station',
       //   meta: {
       //     title: '廊道',
       //     icon: 'dashboard'
@@ -98,8 +98,8 @@ export const constantRoutes = [
       //   children: [
       //     {
       //       path: 'overview',
-      //       component: () => import('@/views/airport/gallery/index'), // Parent router-view
-      //       name: 'gallery-overview',
+      //       component: () => import('@/views/airport/station/index'), // Parent router-view
+      //       name: 'station-overview',
       //       meta: {
       //         title: '廊道概览',
       //         icon: 'dashboard'
@@ -107,7 +107,7 @@ export const constantRoutes = [
       //     },
       //     {
       //       path: 'condition',
-      //       component: () => import('@/views/airport/gallery/condition'),
+      //       component: () => import('@/views/airport/station/condition'),
       //       name: 'condition',
       //       meta: {
       //         title: '空调',
@@ -116,13 +116,13 @@ export const constantRoutes = [
       //       children: [
       //         {
       //           path: 'one',
-      //           component: () => import('@/views/airport/gallery/condition/one/index'),
+      //           component: () => import('@/views/airport/station/condition/one/index'),
       //           name: 'air-one',
       //           meta: { title: '1号空调', icon: 'dashboard' }
       //         },
       //         {
       //           path: 'two',
-      //           component: () => import('@/views/airport/gallery/condition/two/index'),
+      //           component: () => import('@/views/airport/station/condition/two/index'),
       //           name: 'air-two',
       //           meta: { title: '2号空调', icon: 'dashboard' }
       //         }
@@ -198,31 +198,31 @@ export const constantRoutes = [
   },
 
   {
-    path: '/gallery',
+    path: '/station',
     component: Layout,
-    redirect: '/gallery/list',
-    name: 'gallery',
+    redirect: '/station/list',
+    name: 'station',
     meta: {
-      title: '廊道管理',
+      title: '航站楼管理',
       icon: 'nested'
     },
     alwaysShow: true,
     children: [
       {
         path: 'list',
-        component: () => import('@/views/gallery/list'), // Parent router-view
-        name: 'galleryList',
+        component: () => import('@/views/station/list'), // Parent router-view
+        name: 'stationList',
         meta: {
-          title: '廊道列表',
+          title: '航站楼列表',
           icon: 'dashboard'
         },
       },
       {
         path: 'add',
-        component: () => import('@/views/gallery/add'), // Parent router-view
-        name: '添加廊道',
+        component: () => import('@/views/station/add'), // Parent router-view
+        name: 'addStation',
         meta: {
-          title: '添加廊道',
+          title: '添加航站楼',
           icon: 'dashboard'
         },
       },
@@ -249,6 +249,38 @@ export const constantRoutes = [
           icon: 'dashboard'
         },
       }
+    ]
+  },
+
+  {
+    path: '/bridge',
+    component: Layout,
+    redirect: '/bridge/list',
+    name: 'bridge',
+    meta: {
+      title: '登机桥管理',
+      icon: 'nested'
+    },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/bridge/list'), // Parent router-view
+        name: 'bridgeList',
+        meta: {
+          title: '登机桥列表',
+          icon: 'dashboard'
+        },
+      },
+      {
+        path: 'add',
+        component: () => import('@/views/bridge/add'), // Parent router-view
+        name: '添加登机桥',
+        meta: {
+          title: '添加登机桥',
+          icon: 'dashboard'
+        },
+      },
     ]
   },
 

@@ -5,7 +5,7 @@
       fit
       v-loading="loading"
       highlight-current-row
-      :data="galleryList"
+      :data="airportBridgeList"
       style="width: 100%">
       <el-table-column
         label="序号"
@@ -17,16 +17,22 @@
       </el-table-column>
       <el-table-column
         prop="id"
-        label="廊道编号">
+        label="登机桥编号">
       </el-table-column>
       <el-table-column
         prop="name"
-        label="廊道名称">
+        label="登机桥名称">
       </el-table-column>
       <el-table-column
         label="所属机场">
         <template slot-scope="scope">
           {{getAirportName(scope.row.airportId)}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="所属航站楼">
+        <template slot-scope="scope">
+          {{getStationName(scope.row.stationId)}}
         </template>
       </el-table-column>
       <el-table-column
@@ -42,12 +48,12 @@
           <el-button
             size="mini"
             type="primary"
-            @click="editGalleryInfo(scope.$index, scope.row)">编辑
+            @click="editBridgeInfo(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
             size="mini"
             type="danger"
-            @click="removeGallery(scope.row.id)">删除
+            @click="deleteAirportStation(scope.row.id)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -57,7 +63,7 @@
     <div class="block">
       <el-pagination
         background
-        @current-change="getPageGallery"
+        @current-change="getPageAirportBridge"
         :current-page="current"
         :page-size="limit"
         layout="total, prev, pager, next, jumper"
@@ -68,14 +74,17 @@
 </template>
 
 <script>
-  import gallery from "@/api/air-condition/gallery";
+  import gallery from "@/api/air-condition/station";
   import airport from "@/api/air-condition/airport";
+  import bridge from "@/api/air-condition/bridge";
+  import station from "@/api/air-condition/station";
 
   export default {
     data() {
       return {
         airportList:[],
-        galleryList: [],
+        stationList:[],
+        airportBridgeList: [],
         loading: 'true',
         current: 1,
         limit: 10,
@@ -83,15 +92,16 @@
       }
     },
     created() {
-      this.getPageGallery()
+      this.getPageAirportBridge()
       this.getAllAirport()
+      this.getAllStation()
     },
     methods: {
-      getPageGallery(current = 1) {
+      getPageAirportBridge(current = 1) {
         this.current = current
-        gallery.getPageGallery(this.current, this.limit)
+        bridge.getPageAirportBridge(this.current, this.limit)
           .then(res => {
-            this.galleryList = res.data.galleryList
+            this.airportBridgeList = res.data.bridgeList
             this.total = res.data.total
             this.loading = false
           })
@@ -105,6 +115,11 @@
           this.airportList = res.data.airportList
         })
       },
+      getAllStation() {
+        station.findAllStation().then(res=>{
+          this.stationList = res.data.airportStationList
+        })
+      },
       getAirportName(id) {
         for (const airport of this.airportList) {
           if(airport.id == id) {
@@ -113,22 +128,30 @@
           }
         }
       },
-      editGalleryInfo(index, row) {
+      getStationName(id) {
+        for (const station of this.stationList) {
+          if(station.id == id) {
+            return station.name
+            break
+          }
+        }
+      },
+      editBridgeInfo(index, row) {
         console.log(index, row);
       },
-      removeGallery(id) {
-        this.$confirm('此操作将永久删除该廊道, 是否继续?', '提示', {
+      deleteAirportStation(id) {
+        this.$confirm('此操作将永久删除该登机桥, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          gallery.removeGallery(id)
+          bridge.deleteAirportBridge(id)
             .then(res => {
               this.$message({
                 type: 'success',
                 message: '删除成功!'
               });
-              this.getPageGallery();
+              this.getPageAirportBridge();
             })
             .catch(err => {
               this.$message({
@@ -139,7 +162,7 @@
         })
       },
 
-      galleryDetail(index, row) {
+      bridgeDetail(index, row) {
         console.log(index, row);
       },
       handleSizeChange(val) {

@@ -3,14 +3,20 @@
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-select size="mini" v-model="deviceQuery.airport" clearable placeholder="请选择机场名" @change="getAirportGallery">
+        <el-select size="mini" v-model="deviceQuery.airport" clearable placeholder="请选择机场名" @change="getAirportStation">
           <el-option v-for="airport in airportList" :key="airport.id" :value="airport.id" :label="airport.name"/>
         </el-select>
       </el-form-item>
 
       <el-form-item>
-        <el-select size="mini" v-model="deviceQuery.gallery" clearable placeholder="请选择廊道名">
-          <el-option v-for="gallery in selectGalleryList" :key="gallery.id" :value="gallery.id" :label="gallery.name"/>
+        <el-select size="mini" v-model="deviceQuery.station" clearable placeholder="请选择航站楼" @change="getStationBridge">
+          <el-option v-for="station in selectStationList" :key="station.id" :value="station.id" :label="station.name"/>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
+        <el-select size="mini" v-model="deviceQuery.bridge" clearable placeholder="请选择登机桥">
+          <el-option v-for="bridge in selectBridgeList" :key="bridge.id" :value="bridge.id" :label="bridge.name"/>
         </el-select>
       </el-form-item>
 
@@ -65,11 +71,11 @@
         label="设备id"
         width="150px">
       </el-table-column>
-      <el-table-column
-        prop="type"
-        label="设备型号"
-        width="150px">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="type"-->
+<!--        label="设备型号"-->
+<!--        width="150px">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="routingKey"
         label="绑定路由">
@@ -82,10 +88,17 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="所属廊道"
+        label="所属航站楼"
         width="150px">
         <template slot-scope="scope">
-          {{getGalleryName(scope.row.galleryId)}}
+          {{getStationName(scope.row.stationId)}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="所属登记桥"
+        width="150px">
+        <template slot-scope="scope">
+          {{getBridgeName(scope.row.bridgeId)}}
         </template>
       </el-table-column>
       <el-table-column
@@ -133,7 +146,8 @@
 <script>
   import device from "@/api/air-condition/device"
   import airport from "@/api/air-condition/airport"
-  import gallery from "@/api/air-condition/gallery"
+  import station from "@/api/air-condition/station"
+  import bridge from "@/api/air-condition/bridge";
 
   export default {
     data() {
@@ -143,22 +157,26 @@
         limit: 10,
         total: 0,
         airportList: [],
-        galleryList: [],
+        stationList: [],
+        bridgeList: [],
         deviceList: [],
         deviceQuery: {
           airport: '',
-          gallery: '',
+          station: '',
+          bridge: '',
           deviceId: '',
           begin:  '',
           end: '',
         },
-        selectGalleryList:[], //选择机场后的galleryList
+        selectStationList:[], //选择机场后的StationList
+        selectBridgeList: [],
       }
     },
     created() {
       this.queryDeviceList();
       this.getAllAirport();
-      this.getAllGallery();
+      this.getAllStation();
+      this.getAllBridge();
     },
     methods: {
       //条件分页查询
@@ -182,10 +200,18 @@
           }
         }
       },
-      getGalleryName(id) {
-        for (const gallery of this.galleryList) {
-          if (gallery.id == id) {
-            return gallery.name
+      getStationName(id) {
+        for (const station of this.stationList) {
+          if (station.id == id) {
+            return station.name
+            break
+          }
+        }
+      },
+      getBridgeName(id) {
+        for (const bridge of this.bridgeList) {
+          if (bridge.id == id) {
+            return bridge.name
             break
           }
         }
@@ -223,9 +249,14 @@
         })
       },
       //获取所有廊道
-      getAllGallery() {
-        gallery.getAllGallery().then(res => {
-          this.galleryList = res.data.galleryList
+      getAllStation() {
+        station.findAllStation().then(res => {
+          this.stationList = res.data.airportStationList
+        })
+      },
+      getAllBridge() {
+        bridge.findAllAirportBridge().then(res=>{
+          this.bridgeList = res.data.airportBridgeList
         })
       },
 
@@ -241,20 +272,29 @@
       },
       resetData() {
         this.deviceQuery = {}
-        this.selectGalleryList = []
+        this.selectStationList = []
         this.queryDeviceList(1);
         this.getAllAirport();
-        this.getAllGallery();
+        this.getAllStation();
       },
       //会自动把value即airportid传过来
-      getAirportGallery(airportId) {
-        this.selectGalleryList = []
-        for (const gallery of this.galleryList) {
-          if(gallery.airportId == airportId) {
-            this.selectGalleryList.push(gallery)
+      getAirportStation(airportId) {
+        this.selectStationList = []
+        for (const station of this.stationList) {
+          if(station.airportId == airportId) {
+            this.selectStationList.push(station)
           }
         }
-        this.deviceQuery.gallery = ''
+        this.deviceQuery.station = ''
+      },
+      getStationBridge(stationId) {
+        this.selectBridgeList = []
+        for (const bridge of this.bridgeList) {
+          if(bridge.stationId == stationId) {
+            this.selectBridgeList.push(bridge)
+          }
+        }
+        this.deviceQuery.bridge = ''
       }
     }
   }
