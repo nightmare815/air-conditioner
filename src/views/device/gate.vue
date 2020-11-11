@@ -21,7 +21,7 @@
     name: "gate",
     data() {
       return {
-        gateNum: 638133070050,
+        gateNum: 393109648975,
         status:{}
       }
     },

@@ -2,5 +2,5 @@
 export default {
   ROUTING_KEY_PREFIX: '.gree.',
   ROUTING_KEY_SUFFIX: '.set',
-  DELAY: 200, //确认收到新消息后, 延迟多少毫秒查询数据库
+  DELAY: 500, //确认收到新消息后, 延迟多少毫秒查询数据库
 }
