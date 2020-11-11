@@ -162,6 +162,15 @@ export const constantRoutes = [
           icon: 'dashboard'
         },
       },
+      {
+        path: 'gate',
+        component: () => import('@/views/device/gate'), // Parent router-view
+        name: 'gateState',
+        meta: {
+          title: '卷闸门',
+          icon: 'dashboard'
+        },
+      },
     ]
   },
 

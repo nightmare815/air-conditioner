@@ -22,7 +22,6 @@ export default {
       new Promise((resolve, reject) => {
         this.$rabbitmq.initConnect(1111, this.subscribe_routingKey, (topic, message) => {
           let msg = message.toString();
-          console.log(msg)
           let timestamp =Date.parse(new Date());
           //有消息到达时, 更新vuex中的当前毫秒数, 通过各个组件的watch监听vuex中的currentMillis来确认有新消息到达
           this.$store.commit('onmessage/UPDATE_MILLIS', timestamp)
