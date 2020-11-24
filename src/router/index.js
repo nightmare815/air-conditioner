@@ -306,7 +306,7 @@ export const constantRoutes = [
     alwaysShow: true,
     children: [
       {
-        path: 'detail/:id',
+        path: 'list',
         component: () => import('@/views/gate/list'), // Parent router-view
         name: 'gateList',
         meta: {
