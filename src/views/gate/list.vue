@@ -131,6 +131,7 @@
 
 <script>
   import gate from "@/api/air-condition/gate";
+  import device from "@/api/air-condition/device";
   import {mapGetters} from "vuex";
   import config from "@/api/air-condition/config";
 
@@ -166,6 +167,11 @@
         total: 0,
         activeText: '开',
         inactiveText: '关',
+        device: {
+          deviceId: '',
+          routingKey: '',
+          addBy:''
+        },
         rules: {
           name: [
             {required: true, message: '请输入卷帘门名称', trigger: 'blur'},
@@ -219,20 +225,37 @@
       dataFormSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.gate.addBy = this.name;
-            gate.addGate(this.gate).then(res=>{
-              this.$message({
-                type: 'success',
-                message: '添加成功!'
-              });
-              this.gate = {}
-              this.visible =false
-              this.getPageGateStates()
+
+            //生成并添加设备路由信息
+            this.device.addBy = this.name
+            let deviceId = this.gate.deviceId;
+            this.device.deviceId = deviceId;
+            this.device.routingKey = config.ROUTING_KEY_PREFIX + deviceId + config.ROUTING_KEY_SUFFIX;
+            device.addDevice(this.device).then(res => {
+              this.device = {}
             }).catch(err => {
               this.$message({
                 type: 'error',
-                message: '添加出错了'
+                message: '设备添加出错了'
               });
+              this.device = {}
+            }).then(()=>{
+              //设备添加完成后, 继续添加卷闸门
+              this.gate.addBy = this.name;
+              gate.addGate(this.gate).then(res=>{
+                this.$message({
+                  type: 'success',
+                  message: '卷闸门添加成功!'
+                });
+                this.gate = {}
+                this.visible =false
+                this.getPageGateStates()
+              }).catch(err => {
+                this.$message({
+                  type: 'error',
+                  message: '卷闸门添加出错了'
+                });
+              })
             })
           } else {
             console.log('error submit!!');
