@@ -153,24 +153,16 @@ export const constantRoutes = [
           icon: 'dashboard'
         },
       },
-      {
-        path: 'add',
-        component: () => import('@/views/device/add'), // Parent router-view
-        name: 'addDevice',
-        meta: {
-          title: '添加设备',
-          icon: 'dashboard'
-        },
-      },
-      {
-        path: 'gate',
-        component: () => import('@/views/device/gate'), // Parent router-view
-        name: 'gateState',
-        meta: {
-          title: '卷闸门',
-          icon: 'dashboard'
-        },
-      },
+      // {
+      //   path: 'add',
+      //   component: () => import('@/views/device/add'), // Parent router-view
+      //   name: 'addDevice',
+      //   meta: {
+      //     title: '添加设备',
+      //     icon: 'dashboard'
+      //   },
+      // },
+
     ]
   },
 
@@ -194,15 +186,15 @@ export const constantRoutes = [
           icon: 'dashboard'
         },
       },
-      {
-        path: 'add',
-        component: () => import('@/views/airport/add'), // Parent router-view
-        name: '添加机场',
-        meta: {
-          title: '添加机场',
-          icon: 'dashboard'
-        },
-      },
+      // {
+      //   path: 'add',
+      //   component: () => import('@/views/airport/add'), // Parent router-view
+      //   name: '添加机场',
+      //   meta: {
+      //     title: '添加机场',
+      //     icon: 'dashboard'
+      //   },
+      // },
     ]
   },
 
@@ -226,15 +218,15 @@ export const constantRoutes = [
           icon: 'dashboard'
         },
       },
-      {
-        path: 'add',
-        component: () => import('@/views/station/add'), // Parent router-view
-        name: 'addStation',
-        meta: {
-          title: '添加航站楼',
-          icon: 'dashboard'
-        },
-      },
+      // {
+      //   path: 'add',
+      //   component: () => import('@/views/station/add'), // Parent router-view
+      //   name: 'addStation',
+      //   meta: {
+      //     title: '添加航站楼',
+      //     icon: 'dashboard'
+      //   },
+      // },
     ]
   },
 
@@ -281,15 +273,47 @@ export const constantRoutes = [
           icon: 'dashboard'
         },
       },
+      // {
+      //   path: 'add',
+      //   component: () => import('@/views/bridge/add'), // Parent router-view
+      //   name: '添加登机桥',
+      //   meta: {
+      //     title: '添加登机桥',
+      //     icon: 'dashboard'
+      //   },
+      // },
+      // {
+      //   path: 'gate',
+      //   component: () => import('@/views/gate/gate'), // Parent router-view
+      //   name: 'gateState',
+      //   meta: {
+      //     title: '卷帘门',
+      //     icon: 'dashboard'
+      //   },
+      // },
+    ]
+  },
+
+  {
+    path: '/gate',
+    component: Layout,
+    redirect: '/gate/list',
+    name: 'gate',
+    meta: {
+      title: '卷帘门管理',
+      icon: 'nested'
+    },
+    alwaysShow: true,
+    children: [
       {
-        path: 'add',
-        component: () => import('@/views/bridge/add'), // Parent router-view
-        name: '添加登机桥',
+        path: 'detail/:id',
+        component: () => import('@/views/gate/list'), // Parent router-view
+        name: 'gateList',
         meta: {
-          title: '添加登机桥',
+          title: '卷帘门列表',
           icon: 'dashboard'
         },
-      },
+      }
     ]
   },
 

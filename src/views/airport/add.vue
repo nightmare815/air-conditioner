@@ -18,7 +18,6 @@
 
 <script>
   import airport from "@/api/air-condition/airport";
-  import gallery from "@/api/air-condition/station";
   import {mapGetters} from "vuex";
 
   export default {

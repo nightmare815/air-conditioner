@@ -18,6 +18,14 @@ export default {
     })
   },
 
+  //获取单个设备
+  getDeviceById(id) {
+    return request({
+      url: `/aircondition/device/getDeviceById/${id}`,
+      method: 'get',
+    })
+  },
+
   //分页获取所有设备
   getPageDevice(current, limit) {
     return request({

@@ -25,6 +25,15 @@ export default {
       method: 'get',
     })
   },
+  //带条件分页查询
+  getPageBridgeByCondition(current, limit, data) {
+    return request({
+      url: `/aircondition/airportbridge/getPageBridgeByCondition/${current}/${limit}`,
+      method: 'post',
+      data
+    })
+  },
+
   //修改登机桥信息
   editAirportBridge() {
     return request({

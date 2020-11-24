@@ -46,10 +46,11 @@
         />
       </el-form-item>
 
-      <el-button style="margin-top: 5px" size="mini" type="primary" icon="el-icon-search" @click="queryDeviceList()">
+      <el-button style="margin-top: 5px" size="mini" type="primary" @click="queryDeviceList()">
         查询
       </el-button>
       <el-button size="mini" type="default" @click="resetData()">清空</el-button>
+      <el-button size="mini" style="background-color: #17B3A3;color: white" @click="addDevice()">新增</el-button>
     </el-form>
     <el-table
       border
@@ -140,6 +141,38 @@
         :total="total">
       </el-pagination>
     </div>
+    <!--新增设备对话框-->
+    <el-dialog
+      title="新增设备"
+      :close-on-click-modal="false"
+      :visible.sync="visible"
+    >
+      <el-form ref="device" :model="device" :rules="rules" label-width="100px">
+        <el-form-item label="设备编号" prop="deviceId">
+          <el-input v-model="device.deviceId" ></el-input>
+        </el-form-item>
+        <el-form-item label="机场名称" prop="airportId">
+          <el-select v-model="device.airportId" @change="getAirportStation">
+            <el-option v-for="airport in airportList" :key="airport.id" :value="airport.id" :label="airport.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="航站楼名称" prop="stationId">
+          <el-select v-model="device.stationId" @change="getStationBridge">
+            <el-option v-for="station in selectStationList" :key="station.id" :value="station.id" :label="station.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="登机桥名称" prop="bridgeId">
+          <el-select v-model="device.bridgeId" >
+            <el-option v-for="bridge in selectBridgeList" :key="bridge.id" :value="bridge.id" :label="bridge.name"/>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="visible = false">取消</el-button>
+      <el-button type="primary" @click="dataFormSubmit('device')">确定</el-button>
+    </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -148,14 +181,31 @@
   import airport from "@/api/air-condition/airport"
   import station from "@/api/air-condition/station"
   import bridge from "@/api/air-condition/bridge";
+  import {mapGetters} from "vuex";
+  import config from "@/api/air-condition/config";
 
   export default {
+    computed: {
+      ...mapGetters([
+        'name'
+      ])
+    },
     data() {
       return {
         loading: 'true',
         current: 1,
         limit: 10,
         total: 0,
+        visible:false,
+        options:[],
+        device: {
+          deviceId: '',
+          bridgeId: '',
+          stationId: '',
+          airportId: '',
+          routingKey: '',
+          addBy:''
+        },
         airportList: [],
         stationList: [],
         bridgeList: [],
@@ -170,6 +220,21 @@
         },
         selectStationList:[], //选择机场后的StationList
         selectBridgeList: [],
+        rules: {
+          deviceId: [
+            {required: true, message: '请输入设备的编号', trigger: 'blur'},
+            {min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur'}
+          ],
+          airportId: [
+            {required: true, message: '请选择所属机场', trigger: 'blur'}
+          ],
+          stationId: [
+            {required: true, message: '请选择所属航站楼', trigger: 'blur'}
+          ],
+          bridgeId: [
+            {required: true, message: '请选择所属登机桥', trigger: 'blur'}
+          ],
+        },
       }
     },
     created() {
@@ -179,6 +244,7 @@
       this.getAllBridge();
     },
     methods: {
+
       //条件分页查询
       queryDeviceList(current = 1) {
         this.current = current;
@@ -295,6 +361,37 @@
           }
         }
         this.deviceQuery.bridge = ''
+      },
+      addDevice() {
+        this.visible = true;
+      },
+      dataFormSubmit(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            //生成并添加设备路由信息
+            this.device.addBy = this.name
+            let deviceId = this.device.deviceId;
+            this.device.routingKey = config.ROUTING_KEY_PREFIX + deviceId + config.ROUTING_KEY_SUFFIX;
+            device.addDevice(this.device).then(res => {
+              this.$message({
+                type: 'success',
+                message: '添加成功!'
+              });
+              this.visible = false;
+              this.device = {}
+              this.queryDeviceList();
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: '添加出错了'
+              });
+              this.device = {}
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       }
     }
   }

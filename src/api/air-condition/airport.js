@@ -18,6 +18,15 @@ export default {
     })
   },
 
+  //带条件分页查询
+  getPageAirportByCondition(current, limit, data) {
+    return request({
+      url: `/aircondition/airport/getPageAirportByCondition/${current}/${limit}`,
+      method: 'post',
+      data
+    })
+  },
+
   //分页查询机场
   getPageAirport(current, limit) {
     return request({

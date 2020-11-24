@@ -41,7 +41,7 @@
             {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
           ],
           airportId: [
-            {required: true, message: '请选择所属机场', trigger: 'change'}
+            {required: true, message: '请选择所属机场', trigger: 'blur'}
           ],
         },
       }

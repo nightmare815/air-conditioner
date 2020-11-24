@@ -12,7 +12,7 @@ export default {
   },
   data() {
     return {
-      subscribe_routingKey: '/public/update',
+      subscribe_routingKey: ['/public/update','/public/gate'],
     }
   },
   methods: {
@@ -33,3 +33,8 @@ export default {
   }
 }
 </script>
+<style>
+#app {
+  min-width: 1200px;
+}
+</style>

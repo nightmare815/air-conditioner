@@ -25,6 +25,15 @@ export default {
       method: 'get',
     })
   },
+  //带条件分页查询
+  getPageStationByCondition(current, limit, data) {
+    return request({
+      url: `/aircondition/station/getPageStationByCondition/${current}/${limit}`,
+      method: 'post',
+      data
+    })
+  },
+
   //修改航站楼信息
   editAirportStation() {
     return request({
