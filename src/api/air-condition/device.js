@@ -64,6 +64,23 @@ export default {
     })
   },
 
+  //条件分页获取设备的历史修改记录
+  getHistoryDataByCondition(id, current, limit, data) {
+    return request({
+      url: `/aircondition/msgsend/getPageHistoryDataByCondition/${id}/${current}/${limit}`,
+      method: 'post',
+      data
+    })
+  },
+  //条件分页获取设备收到的历史消息
+  getReceiveMsgByCondition(id, current, limit, data) {
+    return request({
+      url: `/aircondition/msgreceive/getPageReceiveMsgByCondition/${id}/${current}/${limit}`,
+      method: 'post',
+      data
+    })
+  },
+
   //分页获取设备的历史修改记录
   getPageHistoryData(id, current, limit) {
     return request({
@@ -77,5 +94,23 @@ export default {
       url: `/aircondition/msgreceive/getPageReceiveMsg/${id}/${current}/${limit}/`,
       method: 'get',
     })
-  }
+  },
+
+  //批量删除历史修改消息
+  deleteBatchHistoryModifyData(data) {
+    return request({
+      url: `/aircondition/msgsend/deleteBatchHistoryData/`,
+      method: 'post',
+      data
+    })
+  },
+
+  //批量删除历史消息记录
+  deleteBatchHistoryReceive(data) {
+    return request({
+      url: `/aircondition/msgreceive/deleteBatchHistoryReceive/`,
+      method: 'post',
+      data
+    })
+  },
 }
