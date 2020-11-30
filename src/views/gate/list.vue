@@ -61,6 +61,7 @@
             v-model="scope.row.gateStatus"
             :active-value="1"
             :inactive-value="0"
+            @change="updateGateStatus(scope.row)"
             :active-text="activeText"
             :inactive-text="inactiveText">
           </el-switch>
@@ -285,6 +286,21 @@
             })
         })
 
+      },
+      updateGateStatus(status){
+        console.log(status)
+        let data = {gateControl: status.gateStatus, deviceId: status.deviceId}
+        gate.updateGateStatus(data ,this.name).then(res=>{
+          this.$message({
+            type: "success",
+            message: "修改成功"
+          })
+        }).catch(err=>{
+          this.$message({
+            type: "error",
+            message: "修改失败了.."
+          })
+        })
       }
     }
   }

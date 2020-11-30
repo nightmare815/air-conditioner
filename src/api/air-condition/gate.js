@@ -9,6 +9,16 @@ export default {
       method: 'get',
     })
   },
+
+  //改变卷帘门的状态
+  updateGateStatus(data, sender) {
+    return request({
+      url: `/aircondition/gate/updateGateStatus/${sender}`,
+      method: 'post',
+      data
+    })
+  },
+
   //带条件分页查询
   getPageGateByCondition(current, limit, data) {
     return request({
